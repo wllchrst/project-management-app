@@ -1,65 +1,32 @@
-import {
-  Card,
-  CardBody,
-  Stack,
-  Image,
-  Heading,
-  Text,
-  CardFooter,
-  Button,
-  Flex,
-  VStack,
-  Box,
-} from "@chakra-ui/react";
+import { Text } from "@chakra-ui/react";
 import { IProject } from "../../interfaces/project-interface";
-import { ExternalLinkIcon, SettingsIcon } from "@chakra-ui/icons";
-import EditProjectBackground from "./edit-project-background";
 import { useNavigate } from "react-router-dom";
 
 export default function ProjectCard({ project }: { project: IProject }) {
   const navigate = useNavigate();
   return (
-    <>
-      <Card
-        direction={{ base: "column", sm: "row" }}
-        overflow="hidden"
-        variant="outline"
-      >
-        <Image
-          objectFit="cover"
-          maxW={{ base: "100%", sm: "300px" }}
+    <div
+      className="flex w-full rounded overflow-hidden shadow-lg border mb-4 hover:bg-sky-50 transition-all"
+      onClick={() => {
+        navigate(`/projects/${project.id}`);
+      }}
+    >
+      {/* Fixed-size project background on the left */}
+      <div className="w-80 h-48">
+        <img
           src={project.background}
-          aspectRatio={1.7}
+          alt={project.name}
+          className="w-full h-full object-cover"
         />
+      </div>
 
-        <Stack>
-          <CardBody>
-            <VStack alignItems={"flex-start"}>
-              <Flex alignItems={"center"} gap={3}>
-                <Heading
-                  size="md"
-                  _hover={{ borderBottom: "1px solid black" }}
-                  onClick={() => {
-                    navigate("/projects/" + project.id);
-                  }}
-                >
-                  {project.name}{" "}
-                </Heading>
-                <EditProjectBackground project={project} />
-              </Flex>
-              <Text noOfLines={3}>{project.description}</Text>
-            </VStack>
-          </CardBody>
-
-          <CardFooter>
-            <Flex
-              alignItems={"center"}
-              justifyItems={"space-between"}
-              width={"100%"}
-            ></Flex>
-          </CardFooter>
-        </Stack>
-      </Card>
-    </>
+      {/* Project name and description on the right */}
+      <div className="flex-1 px-6 py-4">
+        <h2 className="font-bold text-xl mb-2">{project.name}</h2>
+        <Text noOfLines={4} className="text-gray-700 text-base line-clamp-3">
+          {project.description}
+        </Text>
+      </div>
+    </div>
   );
 }

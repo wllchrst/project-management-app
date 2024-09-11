@@ -34,14 +34,14 @@ interface I {
 export default function JobChat({ job }: I) {
   const { user } = useUserAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [current, setCurrent] = useState("");
+  const [input, setInput] = useState("");
   const divRef = useRef<HTMLDivElement>(null);
   const { chats, isLoading } = useChatGroup(job.id);
 
   function clickHandle() {
     if (user.email != undefined)
-      chatJob(job.id, user.email, current).then((success) => {
-        if (success) setCurrent("");
+      chatJob(job.id, user.email, input).then((success) => {
+        if (success) setInput("");
       });
   }
   return (
@@ -57,71 +57,54 @@ export default function JobChat({ job }: I) {
           <DrawerHeader>{job.title}</DrawerHeader>
 
           <DrawerBody>
-            <Box ref={divRef} padding={3} borderRadius={4} height={"100%"}>
-              <VStack
-                justifyContent={"space-between"}
-                height={"100%"}
-                width={"100%"}
-              >
-                <Box
-                  className="border-sm h-full w-full flex flex-col-reverse gap-3 rounded-sm bg-white p-5"
-                  boxShadow={"md"}
-                  overflowY={"scroll"}
+            {/* Chat Header */}
+            <div className="flex justify-between items-center bg-sky-500 text-white px-4 py-2 rounded-t-lg">
+              <h2 className="text-xl font-semibold">Chat Room</h2>
+              <span className="text-sm">Online</span>
+            </div>
+
+            {/* Message List */}
+            <div className="flex-1 overflow-y-auto p-4 bg-white">
+              {chats.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${
+                    message.from === user.email
+                      ? "justify-end"
+                      : "justify-start"
+                  } mb-4`}
                 >
-                  {chats.map((chat, index) => (
-                    <>
-                      {chat.id == job.id ? (
-                        <div key={index}>
-                          {chat.from != user.email ? (
-                            <Flex justifyContent={"flex-start"}>
-                              <Text
-                                padding={2.5}
-                                color={"black"}
-                                backgroundColor={"rgb(240,240,240,1)"}
-                                borderRadius={7}
-                              >
-                                {chat.message}
-                              </Text>
-                            </Flex>
-                          ) : (
-                            <Flex justifyContent={"flex-end"}>
-                              <Text
-                                padding={2.5}
-                                color={"white"}
-                                backgroundColor={"#4B7EFD"}
-                                borderRadius={7}
-                              >
-                                {chat.message}
-                              </Text>
-                            </Flex>
-                          )}
-                        </div>
-                      ) : (
-                        <></>
-                      )}
-                    </>
-                  ))}
-                </Box>
-                <div className="flex w-full gap-2">
-                  <Input
-                    value={current}
-                    boxShadow={"md"}
-                    backgroundColor={"white"}
-                    onChange={(o) => {
-                      setCurrent(o.target.value);
-                    }}
-                  ></Input>
-                  <Button
-                    boxShadow={"md"}
-                    as={Icon}
-                    backgroundColor={"white"}
-                    onClick={clickHandle}
+                  <div
+                    className={`p-3 rounded-lg shadow-md max-w-xs ${
+                      message.from === user.email
+                        ? "bg-sky-500 text-white"
+                        : "bg-gray-100 text-gray-900"
+                    }`}
                   >
-                    <ArrowRightIcon />
-                  </Button>
+                    <p className="text-sm">{message.message}</p>
+                  </div>
                 </div>
-              </VStack>
-            </Box>
+              ))}
+            </div>
+
+            {/* Input Area */}
+            <div className="flex items-center border-t p-4 bg-gray-50">
+              <input
+                type="text"
+                className="flex-1 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-sky-500"
+                placeholder="Type a message..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+              />
+              <button
+                className="ml-4 px-4 py-2 bg-sky-400 text-white rounded-md hover:bg-sky-500 transition"
+                onClick={() => {
+                  clickHandle();
+                }}
+              >
+                Send
+              </button>
+            </div>
           </DrawerBody>
 
           <DrawerFooter>

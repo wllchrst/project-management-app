@@ -12,13 +12,13 @@ export default function Project() {
 
   return (
     <>
-      <VStack alignItems={"flex-start"} padding={10}>
+      <VStack alignItems={"flex-start"} padding={10} className="w-full">
         <Heading size={"lg"}>Projects</Heading>
-        <VStack marginTop={3}>
+        <div className="mt-3 flex flex-col gap-3">
           {projects.map((project, index) => (
             <ProjectCard project={project} key={index} />
           ))}
-        </VStack>
+        </div>
         <Spacer marginTop={2} />
         <CreateProject />
       </VStack>

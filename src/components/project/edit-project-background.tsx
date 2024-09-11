@@ -11,12 +11,23 @@ import {
   VStack,
   Input,
   useToast,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { IProject } from "../../interfaces/project-interface";
 import { getFile } from "../../functions/utility";
 import { useState } from "react";
 import { editBackground } from "../../functions/project";
 import { loadingToast, successToast, warningToast } from "../../utils/toast";
+
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+} from "@chakra-ui/react";
 
 export default function EditProjectBackground({
   project,
@@ -44,18 +55,20 @@ export default function EditProjectBackground({
       });
     }
   }
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
-      <Popover>
-        <PopoverTrigger>
-          <EditIcon />
-        </PopoverTrigger>
-        <PopoverContent width={500}>
-          <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverHeader>Edit Background</PopoverHeader>
-          <PopoverBody>
+      <Button onClick={onOpen} variant={"ghost"} fontSize={"smaller"}>
+        Add Picture
+      </Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Modal Title</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
             <VStack alignItems={"flex-start"}>
               <Input
                 type="file"
@@ -63,11 +76,19 @@ export default function EditProjectBackground({
                   getFile(e, setFile);
                 }}
               />
-              <Button onClick={clickHandle}>Edit</Button>
             </VStack>
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost" onClick={clickHandle}>
+              Edit
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

@@ -1,5 +1,4 @@
 import { Center, Heading, Image, Text, VStack } from "@chakra-ui/react";
-import BackgroundHome from "../components/home/background-home";
 import logo from "../assets/logo.png";
 import { motion } from "framer-motion";
 
