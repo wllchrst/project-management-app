@@ -6,7 +6,7 @@ export default function ViewUser({ users }: { users: IUser[] }) {
   return (
     <Wrap width={"100%"}>
       {users.map((user, index) => (
-        <WrapItem width={"45%"} margin={1} className="">
+        <WrapItem width={"45%"} margin={1} className="" key={index}>
           <ProfileCard profile={user} key={index} />
         </WrapItem>
       ))}
